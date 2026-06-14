@@ -1,0 +1,4 @@
+Date,Sender,Receiver,Message
+2026-01-01,Alice,Bob,Send OTP immediately
+2026-01-02,Bob,Alice,Why do you need OTP
+2026-01-03,Alice,Bob,Your account will be blocked
