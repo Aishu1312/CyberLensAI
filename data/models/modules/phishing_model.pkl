@@ -1,0 +1,17 @@
+# Dataset:
+SMS Spam Collection Dataset
+
+# Model:
+TF-IDF
++
+Logistic Regression
+
+# Pipeline:
+vectorizer
+model
+save model
+
+# Save:
+joblib.dump(model,
+"models/phishing_model.pkl")
+Phase 7: NLP Analysis
