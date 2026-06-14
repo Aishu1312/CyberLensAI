@@ -15,4 +15,10 @@ df = upload_file()
 
 if df is not None:
 
+    for msg in df["Message"]:
+
+        score, level, words = detect_threat(msg)
+
+        st.write(msg)
+        st.write(level)
     st.dataframe(df)
