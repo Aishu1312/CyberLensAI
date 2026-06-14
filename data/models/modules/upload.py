@@ -11,4 +11,11 @@ def upload_file():
         df = pd.read_csv(uploaded_file)
         return df
 
+    from modules.upload import upload_file
+
+df = upload_file()
+
+if df is not None:
+    st.dataframe(df)
+
     return None
