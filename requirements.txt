@@ -3,6 +3,7 @@ pandas
 numpy
 plotly
 networkx
+matplotlib
 scikit-learn
 joblib
 nltk
