@@ -1,0 +1,13 @@
+streamlit
+pandas
+numpy
+plotly
+networkx
+scikit-learn
+joblib
+nltk
+spacy
+transformers
+firebase-admin
+reportlab
+PyPDF2
