@@ -1,4 +1,4 @@
-import streamlit as st
+imimport streamlit as st
 from utils import inject_css, init_state, GLOBAL_CSS
 
 st.set_page_config(
@@ -8,27 +8,24 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Hide ONLY Streamlit default multipage menu
+inject_css()
+init_state()
+
 st.markdown("""
 <style>
 
-/* Hide app/about/dashboard list */
-[data-testid="stSidebarNav"]{
-    visibility:hidden;
-    height:0px;
+/* Hide Streamlit automatic pages */
+section[data-testid="stSidebarNav"] {
+    display:none !important;
 }
 
-
-/* Restore content */
-[data-testid="stSidebarContent"]{
-    display:block !important;
+/* Clean spacing */
+section[data-testid="stSidebar"] > div {
+    padding-top:0rem;
 }
 
 </style>
 """, unsafe_allow_html=True)
-
-inject_css()
-init_state()
 
 # ── Sidebar navigation ──────────────────────────────────────────────────────
 with st.sidebar:
