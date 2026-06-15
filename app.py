@@ -1,6 +1,9 @@
 import streamlit as st
-from utils import inject_css, init_state, GLOBAL_CSS
+from utils import inject_css, init_state
 
+# ─────────────────────────────────────────────────────────────
+# Page Config
+# ─────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="CyberLens AI",
     page_icon="🎯",
@@ -8,83 +11,170 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# ─────────────────────────────────────────────────────────────
+# Initialize App
+# ─────────────────────────────────────────────────────────────
 inject_css()
 init_state()
 
-st.markdown("""
-<style>
+# ─────────────────────────────────────────────────────────────
+# Hide Streamlit Default UI
+# ─────────────────────────────────────────────────────────────
+st.markdown(
+    """
+    <style>
 
-/* Hide Streamlit automatic pages */
-section[data-testid="stSidebarNav"] {
-    display:none !important;
-}
-
-/* Clean spacing */
-section[data-testid="stSidebar"] > div {
-    padding-top:0rem;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-# ── Sidebar navigation ──────────────────────────────────────────────────────
-with st.sidebar:
-    st.markdown(
-        '<div style="display:flex;align-items:center;gap:10px;margin-bottom:2rem;">'
-        '<span style="font-size:1.6rem;">🎯</span>'
-        '<span style="font-family:\'Space Grotesk\',sans-serif;font-weight:800;font-size:1.2rem;color:#F1F5F9;">CyberLens AI</span>'
-        '</div>',
-        unsafe_allow_html=True,
-    )
-
-    pages = {
-        "🏠  Home":                "Home",
-        "📊  Command Center":      "Dashboard",
-        "🔍  Investigations":      "Investigations",
-        "📤  Ingest Evidence":     "Upload",
-        "⚡  Quick Analyze":       "Analyze",
-        "📄  Reports":             "Reports",
-        "ℹ️  About":              "About",
+    /* Hide default multipage navigation */
+    [data-testid="stSidebarNav"] {
+        display: none !important;
     }
 
-    if "page" not in st.session_state:
-        st.session_state.page = "Home"
+    [data-testid="stSidebarNavItems"] {
+        display: none !important;
+    }
 
-    for label, key in pages.items():
-        active = st.session_state.page == key
-        btn_style = (
-            "background:#1E2D4A;color:#3B82F6;border-left:3px solid #3B82F6;"
-            if active else
-            "background:transparent;color:#94A3B8;border-left:3px solid transparent;"
-        )
-        if st.sidebar.button(
-            label,
-            key=f"nav_{key}",
-            use_container_width=True,
-        ):
-            st.session_state.page = key
-            st.rerun()
+    /* Hide Streamlit menu */
+    #MainMenu {
+        visibility: hidden;
+    }
 
-    st.sidebar.markdown("---")
-    st.sidebar.markdown(
-        '<p style="color:#334155;font-size:0.7rem;text-align:center;">SDG 16 · SDG 9 · © 2025 CyberLens AI</p>',
+    /* Hide footer */
+    footer {
+        visibility: hidden;
+    }
+
+    /* Hide header */
+    header {
+        visibility: hidden;
+    }
+
+    /* Sidebar styling */
+    section[data-testid="stSidebar"] {
+        background-color: #07132B;
+        border-right: 1px solid #1E293B;
+    }
+
+    /* Reduce top padding */
+    section[data-testid="stSidebar"] > div {
+        padding-top: 1rem;
+    }
+
+    /* Main content width */
+    .block-container {
+        padding-top: 2rem;
+        max-width: 1400px;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# ─────────────────────────────────────────────────────────────
+# Session State
+# ─────────────────────────────────────────────────────────────
+if "page" not in st.session_state:
+    st.session_state.page = "Home"
+
+# ─────────────────────────────────────────────────────────────
+# Sidebar
+# ─────────────────────────────────────────────────────────────
+with st.sidebar:
+
+    st.markdown(
+        """
+        <div style="
+            display:flex;
+            align-items:center;
+            gap:12px;
+            margin-bottom:25px;
+        ">
+            <span style="font-size:34px;">🎯</span>
+            <span style="
+                font-size:28px;
+                font-weight:700;
+                color:white;
+            ">
+                CyberLens AI
+            </span>
+        </div>
+        """,
         unsafe_allow_html=True,
     )
 
-# ── Page router ─────────────────────────────────────────────────────────────
+    st.markdown("---")
+
+    pages = {
+        "🏠 Home": "Home",
+        "📊 Command Center": "Dashboard",
+        "🔍 Investigations": "Investigations",
+        "📤 Ingest Evidence": "Upload",
+        "⚡ Quick Analyze": "Analyze",
+        "📄 Reports": "Reports",
+        "ℹ️ About": "About",
+    }
+
+    for label, page_key in pages.items():
+
+        if st.button(
+            label,
+            use_container_width=True,
+            key=f"nav_{page_key}",
+        ):
+            st.session_state.page = page_key
+            st.rerun()
+
+    st.markdown("---")
+
+    st.markdown(
+        """
+        <div style="
+            text-align:center;
+            color:#94A3B8;
+            font-size:12px;
+            margin-top:15px;
+        ">
+            SDG 16 • SDG 9<br>
+            © 2025 CyberLens AI
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+# ─────────────────────────────────────────────────────────────
+# Router
+# ─────────────────────────────────────────────────────────────
 page = st.session_state.page
 
-if page == "Home":
-    from pages import home; home.render()
-elif page == "Dashboard":
-    from pages import dashboard; dashboard.render()
-elif page == "Investigations":
-    from pages import investigations; investigations.render()
-elif page == "Upload":
-    from pages import upload; upload.render()
-elif page == "Analyze":
-    from pages import analyze; analyze.render()
-elif page == "Reports":
-    from pages import reports; reports.render()
-elif page == "About":
-    from pages import about; about.render()
+try:
+
+    if page == "Home":
+        from views import home
+        home.render()
+
+    elif page == "Dashboard":
+        from views import dashboard
+        dashboard.render()
+
+    elif page == "Investigations":
+        from views import investigations
+        investigations.render()
+
+    elif page == "Upload":
+        from views import upload
+        upload.render()
+
+    elif page == "Analyze":
+        from views import analyze
+        analyze.render()
+
+    elif page == "Reports":
+        from views import reports
+        reports.render()
+
+    elif page == "About":
+        from views import about
+        about.render()
+
+except Exception as e:
+    st.error(f"Error loading page: {e}")
