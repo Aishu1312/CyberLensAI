@@ -5,20 +5,8 @@ st.set_page_config(
     page_title="CyberLens AI",
     page_icon="🎯",
     layout="wide",
-    initial_sidebar_state="collapsed",   # ← change here
+    initial_sidebar_state="expanded",
 )
-
-# Hide Streamlit default page navigation
-st.markdown("""
-<style>
-
-/* Keep sidebar available */
-section[data-testid="stSidebar"]{
-    width:320px !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
 
 inject_css()
 init_state()
@@ -70,34 +58,17 @@ with st.sidebar:
 # ── Page router ─────────────────────────────────────────────────────────────
 page = st.session_state.page
 
-try:
-    if page == "Home":
-        from pages import home
-        home.render()
-
-    elif page == "Dashboard":
-        from pages import dashboard
-        dashboard.render()
-
-    elif page == "Investigations":
-        from pages import investigations
-        investigations.render()
-
-    elif page == "Upload":
-        from pages import upload
-        upload.render()
-
-    elif page == "Analyze":
-        from pages import analyze
-        analyze.render()
-
-    elif page == "Reports":
-        from pages import reports
-        reports.render()
-
-    elif page == "About":
-        from pages import about
-        about.render()
-
-except Exception as e:
-    st.error(f"Page loading failed: {e}")
+if page == "Home":
+    from pages import home; home.render()
+elif page == "Dashboard":
+    from pages import dashboard; dashboard.render()
+elif page == "Investigations":
+    from pages import investigations; investigations.render()
+elif page == "Upload":
+    from pages import upload; upload.render()
+elif page == "Analyze":
+    from pages import analyze; analyze.render()
+elif page == "Reports":
+    from pages import reports; reports.render()
+elif page == "About":
+    from pages import about; about.render()
