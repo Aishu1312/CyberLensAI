@@ -8,6 +8,23 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# Hide Streamlit default multipage navigation
+st.markdown("""
+<style>
+
+/* Hide default navigation */
+[data-testid="stSidebarNav"]{
+    display:none;
+}
+
+/* Remove top blank area */
+[data-testid="stSidebarNavItems"]{
+    display:none;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 inject_css()
 init_state()
 
