@@ -3,7 +3,7 @@ from views import home, dashboard, investigations, upload, analyze, reports, abo
 from utils import inject_css, init_state
 
 # ─────────────────────────────────────────────────────────────
-# 1. Page Config
+# 1. Page Config (Must be the first command)
 # ─────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="CyberLens AI",
@@ -13,65 +13,114 @@ st.set_page_config(
 )
 
 # ─────────────────────────────────────────────────────────────
-# 2. Initialize App
+# 2. Initialize App State & Global CSS
 # ─────────────────────────────────────────────────────────────
 inject_css()
 init_state()
 
 # ─────────────────────────────────────────────────────────────
-# 3. Clean CSS for Sidebar Visibility
+# 3. Custom CSS to Match Your Screenshot
 # ─────────────────────────────────────────────────────────────
 st.markdown(
     """
     <style>
-    /* Force sidebar to be visible and have a fixed width */
+    /* Force sidebar background color to match your dark theme */
     [data-testid="stSidebar"] {
-        display: flex !important;
-        background-color: #07132B !important;
+        background-color: #0B1221 !important;
         border-right: 1px solid #1E293B !important;
-        min-width: 300px !important;
-        width: 300px !important;
+        min-width: 280px !important;
     }
-    
-    /* Hide default Streamlit navigation */
-    [data-testid="stSidebarNav"],
-    [data-testid="stSidebarCollapseButton"] {
+
+    /* HIDE THE REDUNDANT DEFAULT NAVIGATION AT THE TOP */
+    [data-testid="stSidebarNav"] {
         display: none !important;
     }
 
-    /* Hide system elements */
-    #MainMenu, footer, header { visibility: hidden !important; }
+    /* Hide system header and footer */
+    header { visibility: hidden !important; }
+    footer { visibility: hidden !important; }
+
+    /* ---------------------------------------------------- */
+    /* CUSTOM SIDEBAR BUTTON STYLING (Matches Screenshot)   */
+    /* ---------------------------------------------------- */
+    [data-testid="stSidebar"] div.stButton > button {
+        background-color: #1E293B !important; /* Dark bluish-grey button */
+        color: #F8FAFC !important;
+        border: none !important;
+        border-radius: 6px !important;
+        padding: 0.5rem 1rem !important;
+        height: auto !important;
+        display: flex !important;
+        justify-content: center !important; /* Centers the icon and text */
+        transition: all 0.2s ease-in-out !important;
+        margin-bottom: 5px !important;
+    }
+
+    /* Hover effect for buttons */
+    [data-testid="stSidebar"] div.stButton > button:hover {
+        background-color: #334155 !important;
+        color: white !important;
+    }
     
-    /* Ensure main content isn't pushed too far */
-    .block-container { padding-left: 2rem !important; }
+    /* Active/Click effect for buttons */
+    [data-testid="stSidebar"] div.stButton > button:active,
+    [data-testid="stSidebar"] div.stButton > button:focus {
+        background-color: #3B82F6 !important; /* Blue highlight */
+        color: white !important;
+        border-color: #3B82F6 !important;
+    }
+
+    /* Typography for buttons */
+    [data-testid="stSidebar"] div.stButton > button p {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        margin: 0 !important;
+    }
+
+    /* Title Styling */
+    .sidebar-title-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 30px;
+        margin-top: -10px;
+    }
+    .sidebar-icon { font-size: 32px; }
+    .sidebar-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+    }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
 # ─────────────────────────────────────────────────────────────
-# 4. Session State
+# 4. Session State for Routing
 # ─────────────────────────────────────────────────────────────
+# I set the default to "Dashboard" so it automatically loads 
+# the Command Center screen shown in your screenshot.
 if "page" not in st.session_state:
-    st.session_state.page = "Home"
+    st.session_state.page = "Dashboard"
 
 # ─────────────────────────────────────────────────────────────
-# 5. Sidebar Navigation
+# 5. Sidebar UI
 # ─────────────────────────────────────────────────────────────
 with st.sidebar:
+    # App Title
     st.markdown(
         """
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:25px; padding-top:20px;">
-            <span style="font-size:34px;">🎯</span>
-            <span style="font-size:24px; font-weight:700; color:white;">CyberLens AI</span>
+        <div class="sidebar-title-container">
+            <span class="sidebar-icon">🎯</span>
+            <span class="sidebar-title">CyberLens AI</span>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    st.markdown("---")
-
-    nav_items = {
+    # Navigation Dictionary
+    navigation_map = {
         "🏠 Home": "Home",
         "📊 Command Center": "Dashboard",
         "🔍 Investigations": "Investigations",
@@ -81,20 +130,14 @@ with st.sidebar:
         "ℹ️ About": "About",
     }
 
-    for label, page_key in nav_items.items():
+    # Generate Buttons
+    for label, page_key in navigation_map.items():
         if st.button(label, use_container_width=True, key=f"nav_{page_key}"):
             st.session_state.page = page_key
             st.rerun()
 
-    st.markdown("---")
-    st.markdown(
-        """<div style="text-align:center; color:#94A3B8; font-size:12px;">
-            SDG 16 • SDG 9<br>© 2025 CyberLens AI</div>""",
-        unsafe_allow_html=True,
-    )
-
 # ─────────────────────────────────────────────────────────────
-# 6. Router
+# 6. View Router
 # ─────────────────────────────────────────────────────────────
 page_renderers = {
     "Home": home.render,
@@ -107,7 +150,10 @@ page_renderers = {
 }
 
 try:
+    # Render the selected page based on session state
     if st.session_state.page in page_renderers:
         page_renderers[st.session_state.page]()
+    else:
+        st.error("Page not found.")
 except Exception as e:
-    st.error(f"Error loading page: {e}")
+    st.error(f"Error loading {st.session_state.page} page: {e}")
