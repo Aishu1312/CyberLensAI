@@ -3,53 +3,58 @@ from views import home, dashboard, investigations, upload, analyze, reports, abo
 from utils import inject_css, init_state
 
 # ─────────────────────────────────────────────────────────────
-# Page Config
+# 1. Page Config
 # ─────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="CyberLens AI",
     page_icon="🎯",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="expanded",  # Forces sidebar to start expanded
 )
 
 # ─────────────────────────────────────────────────────────────
-# Initialize App
+# 2. Initialize App
 # ─────────────────────────────────────────────────────────────
 inject_css()
 init_state()
 
 # ─────────────────────────────────────────────────────────────
-# Custom CSS for Navigation & UI
+# 3. Enhanced CSS for Sidebar Persistence
 # ─────────────────────────────────────────────────────────────
 st.markdown(
     """
     <style>
+    /* Hide default Streamlit multi-page nav */
     [data-testid="stSidebarNav"] { display: none !important; }
+    
+    /* Hide the collapse/expand button so it cannot be closed */
+    [data-testid="stSidebarCollapseButton"] { display: none !important; }
+    
+    /* Hide other UI elements */
     #MainMenu, footer, header { visibility: hidden; }
     
+    /* Sidebar container styling */
     section[data-testid="stSidebar"] {
-        background-color: #07132B;
-        border-right: 1px solid #1E293B;
+        background-color: #07132B !important;
+        border-right: 1px solid #1E293B !important;
+        width: 300px !important; /* Fixed width for stability */
     }
     
-    /* Active button styling */
-    div.stButton > button:active {
-        border: 1px solid #3B82F6;
-        background-color: #1E293B;
-    }
+    /* Ensure sidebar content padding */
+    section[data-testid="stSidebar"] > div { padding-top: 1rem; }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
 # ─────────────────────────────────────────────────────────────
-# Session State
+# 4. Session State
 # ─────────────────────────────────────────────────────────────
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
 # ─────────────────────────────────────────────────────────────
-# Sidebar
+# 5. Sidebar Navigation
 # ─────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown(
@@ -75,7 +80,7 @@ with st.sidebar:
     }
 
     for label, page_key in navigation_map.items():
-        if st.sidebar.button(label, use_container_width=True, key=f"btn_{page_key}"):
+        if st.button(label, use_container_width=True, key=f"nav_{page_key}"):
             st.session_state.page = page_key
             st.rerun()
 
@@ -87,7 +92,7 @@ with st.sidebar:
     )
 
 # ─────────────────────────────────────────────────────────────
-# Router
+# 6. Router
 # ─────────────────────────────────────────────────────────────
 page_renderers = {
     "Home": home.render,
@@ -100,7 +105,6 @@ page_renderers = {
 }
 
 try:
-    # Execute the render function based on session state
     if st.session_state.page in page_renderers:
         page_renderers[st.session_state.page]()
 except Exception as e:
