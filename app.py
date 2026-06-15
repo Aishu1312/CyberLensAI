@@ -5,8 +5,25 @@ st.set_page_config(
     page_title="CyberLens AI",
     page_icon="🎯",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",   # ← change here
 )
+
+# Hide Streamlit default page navigation
+st.markdown("""
+<style>
+
+/* Remove default page list */
+[data-testid="stSidebarNav"]{
+    display:none;
+}
+
+/* Keep sidebar available */
+section[data-testid="stSidebar"]{
+    width:320px !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 inject_css()
 init_state()
