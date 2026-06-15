@@ -1,4 +1,11 @@
 import streamlit as st
+from views import home
+from views import dashboard
+from views import investigations
+from views import upload
+from views import analyze
+from views import reports
+from views import about
 from utils import inject_css, init_state
 
 # ─────────────────────────────────────────────────────────────
