@@ -3,7 +3,7 @@ from views import home, dashboard, investigations, upload, analyze, reports, abo
 from utils import inject_css, init_state
 
 # ─────────────────────────────────────────────────────────────
-# 1. Page Config 
+# 1. Page Config (Must be the very first Streamlit command)
 # ─────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="CyberLens AI",
@@ -19,29 +19,28 @@ inject_css()
 init_state()
 
 # ─────────────────────────────────────────────────────────────
-# 3. CSS to Style and LOCK the Sidebar
+# 3. CSS for Sidebar Styling & Locking
 # ─────────────────────────────────────────────────────────────
 st.markdown(
     """
     <style>
-    /* HIDE THE DEFAULT STREAMLIT MULTI-PAGE NAVIGATION LIST */
+    /* 1. HIDE THE DEFAULT STREAMLIT MULTI-PAGE NAVIGATION LIST */
     [data-testid="stSidebarNav"] {
         display: none !important;
     }
 
-    /* 🔥 LOCK THE SIDEBAR: Hide the collapse button (<<) entirely 🔥 */
+    /* 2. PREVENT ACCIDENTAL CLOSING: Hide the "<<" collapse button */
     [data-testid="stSidebarCollapseButton"] {
         display: none !important;
+    }
+    
+    /* 3. SAFETY NET: If somehow closed, ensure the ">" expand button is visible */
+    [data-testid="collapsedControl"] {
+        display: flex !important;
     }
 
     /* Hide the bottom footer */
     footer { visibility: hidden !important; }
-    
-    /* Ensure the sidebar background matches perfectly */
-    [data-testid="stSidebar"] {
-        background-color: #0B1221 !important;
-        border-right: 1px solid #1E293B !important;
-    }
 
     /* CUSTOM STYLING FOR YOUR NAVIGATION BUTTONS */
     [data-testid="stSidebar"] div.stButton > button {
