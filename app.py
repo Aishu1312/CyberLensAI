@@ -9,7 +9,7 @@ st.set_page_config(
     page_title="CyberLens AI",
     page_icon="🎯",
     layout="wide",
-    initial_sidebar_state="expanded", # Forces sidebar to open
+    initial_sidebar_state="expanded", 
 )
 
 # ─────────────────────────────────────────────────────────────
@@ -19,39 +19,28 @@ inject_css()
 init_state()
 
 # ─────────────────────────────────────────────────────────────
-# 3. Bulletproof CSS for Sidebar Visibility & Styling
+# 3. Safe CSS for Sidebar Styling
 # ─────────────────────────────────────────────────────────────
 st.markdown(
     """
     <style>
-    /* Force the main sidebar container to ALWAYS be visible */
-    section[data-testid="stSidebar"] {
-        display: block !important;
-        visibility: visible !important;
-        background-color: #0B1221 !important;
-        border-right: 1px solid #1E293B !important;
-        width: 300px !important;
-        min-width: 300px !important;
-    }
-
-    /* Hide ONLY the default Streamlit multi-page navigation list */
-    section[data-testid="stSidebarNav"] {
+    /* HIDE THE DEFAULT STREAMLIT MULTI-PAGE NAVIGATION LIST ONLY */
+    [data-testid="stSidebarNav"] {
         display: none !important;
     }
 
-    /* Hide the top header and bottom footer */
-    header { visibility: hidden !important; }
+    /* Hide the bottom footer */
     footer { visibility: hidden !important; }
 
-    /* Custom styling for your Navigation Buttons */
-    section[data-testid="stSidebar"] div.stButton > button {
+    /* CUSTOM STYLING FOR YOUR NAVIGATION BUTTONS */
+    [data-testid="stSidebar"] div.stButton > button {
         background-color: #1E293B !important;
         color: #F8FAFC !important;
         border: none !important;
         border-radius: 6px !important;
         padding: 0.6rem 1rem !important;
         display: flex !important;
-        justify-content: flex-start !important; /* Aligns text to the left like in your image */
+        justify-content: flex-start !important; 
         width: 100% !important;
         margin-bottom: 8px !important;
         transition: all 0.2s ease-in-out !important;
@@ -59,14 +48,14 @@ st.markdown(
     }
 
     /* Hover effect */
-    section[data-testid="stSidebar"] div.stButton > button:hover {
+    [data-testid="stSidebar"] div.stButton > button:hover {
         background-color: #334155 !important;
         color: white !important;
     }
     
     /* Active/Clicked effect */
-    section[data-testid="stSidebar"] div.stButton > button:active,
-    section[data-testid="stSidebar"] div.stButton > button:focus {
+    [data-testid="stSidebar"] div.stButton > button:active,
+    [data-testid="stSidebar"] div.stButton > button:focus {
         background-color: #3B82F6 !important;
         color: white !important;
     }
