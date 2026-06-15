@@ -9,7 +9,7 @@ st.set_page_config(
     page_title="CyberLens AI",
     page_icon="🎯",
     layout="wide",
-    initial_sidebar_state="expanded",  # Forces sidebar to start expanded
+    initial_sidebar_state="expanded",
 )
 
 # ─────────────────────────────────────────────────────────────
@@ -19,29 +19,31 @@ inject_css()
 init_state()
 
 # ─────────────────────────────────────────────────────────────
-# 3. Enhanced CSS for Sidebar Persistence
+# 3. Clean CSS for Sidebar Visibility
 # ─────────────────────────────────────────────────────────────
 st.markdown(
     """
     <style>
-    /* Hide default Streamlit multi-page nav */
-    [data-testid="stSidebarNav"] { display: none !important; }
-    
-    /* Hide the collapse/expand button so it cannot be closed */
-    [data-testid="stSidebarCollapseButton"] { display: none !important; }
-    
-    /* Hide other UI elements */
-    #MainMenu, footer, header { visibility: hidden; }
-    
-    /* Sidebar container styling */
-    section[data-testid="stSidebar"] {
+    /* Force sidebar to be visible and have a fixed width */
+    [data-testid="stSidebar"] {
+        display: flex !important;
         background-color: #07132B !important;
         border-right: 1px solid #1E293B !important;
-        width: 300px !important; /* Fixed width for stability */
+        min-width: 300px !important;
+        width: 300px !important;
     }
     
-    /* Ensure sidebar content padding */
-    section[data-testid="stSidebar"] > div { padding-top: 1rem; }
+    /* Hide default Streamlit navigation */
+    [data-testid="stSidebarNav"],
+    [data-testid="stSidebarCollapseButton"] {
+        display: none !important;
+    }
+
+    /* Hide system elements */
+    #MainMenu, footer, header { visibility: hidden !important; }
+    
+    /* Ensure main content isn't pushed too far */
+    .block-container { padding-left: 2rem !important; }
     </style>
     """,
     unsafe_allow_html=True,
@@ -59,7 +61,7 @@ if "page" not in st.session_state:
 with st.sidebar:
     st.markdown(
         """
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:25px;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:25px; padding-top:20px;">
             <span style="font-size:34px;">🎯</span>
             <span style="font-size:24px; font-weight:700; color:white;">CyberLens AI</span>
         </div>
@@ -69,7 +71,7 @@ with st.sidebar:
 
     st.markdown("---")
 
-    navigation_map = {
+    nav_items = {
         "🏠 Home": "Home",
         "📊 Command Center": "Dashboard",
         "🔍 Investigations": "Investigations",
@@ -79,7 +81,7 @@ with st.sidebar:
         "ℹ️ About": "About",
     }
 
-    for label, page_key in navigation_map.items():
+    for label, page_key in nav_items.items():
         if st.button(label, use_container_width=True, key=f"nav_{page_key}"):
             st.session_state.page = page_key
             st.rerun()
