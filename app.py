@@ -8,17 +8,19 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Hide ONLY Streamlit default navigation
+# Hide ONLY Streamlit default multipage menu
 st.markdown("""
 <style>
 
-/* Hide default page navigator */
+/* Hide app/about/dashboard list */
 [data-testid="stSidebarNav"]{
-    display:none !important;
+    visibility:hidden;
+    height:0px;
 }
 
-/* Keep custom sidebar visible */
-section[data-testid="stSidebar"]{
+
+/* Restore content */
+[data-testid="stSidebarContent"]{
     display:block !important;
 }
 
