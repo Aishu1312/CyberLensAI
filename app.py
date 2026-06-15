@@ -1,4 +1,4 @@
-imimport streamlit as st
+import streamlit as st
 from utils import inject_css, init_state, GLOBAL_CSS
 
 st.set_page_config(
