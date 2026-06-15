@@ -3,7 +3,7 @@ from views import home, dashboard, investigations, upload, analyze, reports, abo
 from utils import inject_css, init_state
 
 # ─────────────────────────────────────────────────────────────
-# 1. Page Config (Must be the very first Streamlit command)
+# 1. Page Config 
 # ─────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="CyberLens AI",
@@ -19,18 +19,29 @@ inject_css()
 init_state()
 
 # ─────────────────────────────────────────────────────────────
-# 3. Safe CSS for Sidebar Styling
+# 3. CSS to Style and LOCK the Sidebar
 # ─────────────────────────────────────────────────────────────
 st.markdown(
     """
     <style>
-    /* HIDE THE DEFAULT STREAMLIT MULTI-PAGE NAVIGATION LIST ONLY */
+    /* HIDE THE DEFAULT STREAMLIT MULTI-PAGE NAVIGATION LIST */
     [data-testid="stSidebarNav"] {
+        display: none !important;
+    }
+
+    /* 🔥 LOCK THE SIDEBAR: Hide the collapse button (<<) entirely 🔥 */
+    [data-testid="stSidebarCollapseButton"] {
         display: none !important;
     }
 
     /* Hide the bottom footer */
     footer { visibility: hidden !important; }
+    
+    /* Ensure the sidebar background matches perfectly */
+    [data-testid="stSidebar"] {
+        background-color: #0B1221 !important;
+        border-right: 1px solid #1E293B !important;
+    }
 
     /* CUSTOM STYLING FOR YOUR NAVIGATION BUTTONS */
     [data-testid="stSidebar"] div.stButton > button {
