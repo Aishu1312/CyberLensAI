@@ -58,17 +58,34 @@ with st.sidebar:
 # ── Page router ─────────────────────────────────────────────────────────────
 page = st.session_state.page
 
-if page == "Home":
-    from pages import home; home.render()
-elif page == "Dashboard":
-    from pages import dashboard; dashboard.render()
-elif page == "Investigations":
-    from pages import investigations; investigations.render()
-elif page == "Upload":
-    from pages import upload; upload.render()
-elif page == "Analyze":
-    from pages import analyze; analyze.render()
-elif page == "Reports":
-    from pages import reports; reports.render()
-elif page == "About":
-    from pages import about; about.render()
+try:
+    if page == "Home":
+        from pages import home
+        home.render()
+
+    elif page == "Dashboard":
+        from pages import dashboard
+        dashboard.render()
+
+    elif page == "Investigations":
+        from pages import investigations
+        investigations.render()
+
+    elif page == "Upload":
+        from pages import upload
+        upload.render()
+
+    elif page == "Analyze":
+        from pages import analyze
+        analyze.render()
+
+    elif page == "Reports":
+        from pages import reports
+        reports.render()
+
+    elif page == "About":
+        from pages import about
+        about.render()
+
+except Exception as e:
+    st.error(f"Page loading failed: {e}")
