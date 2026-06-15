@@ -3,93 +3,72 @@ from views import home, dashboard, investigations, upload, analyze, reports, abo
 from utils import inject_css, init_state
 
 # ─────────────────────────────────────────────────────────────
-# 1. Page Config (Must be the first command)
+# 1. Page Config (Must be the very first Streamlit command)
 # ─────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="CyberLens AI",
     page_icon="🎯",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="expanded", # Forces sidebar to open
 )
 
 # ─────────────────────────────────────────────────────────────
-# 2. Initialize App State & Global CSS
+# 2. Initialize App State
 # ─────────────────────────────────────────────────────────────
 inject_css()
 init_state()
 
 # ─────────────────────────────────────────────────────────────
-# 3. Custom CSS to Match Your Screenshot
+# 3. Bulletproof CSS for Sidebar Visibility & Styling
 # ─────────────────────────────────────────────────────────────
 st.markdown(
     """
     <style>
-    /* Force sidebar background color to match your dark theme */
-    [data-testid="stSidebar"] {
+    /* Force the main sidebar container to ALWAYS be visible */
+    section[data-testid="stSidebar"] {
+        display: block !important;
+        visibility: visible !important;
         background-color: #0B1221 !important;
         border-right: 1px solid #1E293B !important;
-        min-width: 280px !important;
+        width: 300px !important;
+        min-width: 300px !important;
     }
 
-    /* HIDE THE REDUNDANT DEFAULT NAVIGATION AT THE TOP */
-    [data-testid="stSidebarNav"] {
+    /* Hide ONLY the default Streamlit multi-page navigation list */
+    section[data-testid="stSidebarNav"] {
         display: none !important;
     }
 
-    /* Hide system header and footer */
+    /* Hide the top header and bottom footer */
     header { visibility: hidden !important; }
     footer { visibility: hidden !important; }
 
-    /* ---------------------------------------------------- */
-    /* CUSTOM SIDEBAR BUTTON STYLING (Matches Screenshot)   */
-    /* ---------------------------------------------------- */
-    [data-testid="stSidebar"] div.stButton > button {
-        background-color: #1E293B !important; /* Dark bluish-grey button */
+    /* Custom styling for your Navigation Buttons */
+    section[data-testid="stSidebar"] div.stButton > button {
+        background-color: #1E293B !important;
         color: #F8FAFC !important;
         border: none !important;
         border-radius: 6px !important;
-        padding: 0.5rem 1rem !important;
-        height: auto !important;
+        padding: 0.6rem 1rem !important;
         display: flex !important;
-        justify-content: center !important; /* Centers the icon and text */
+        justify-content: flex-start !important; /* Aligns text to the left like in your image */
+        width: 100% !important;
+        margin-bottom: 8px !important;
         transition: all 0.2s ease-in-out !important;
-        margin-bottom: 5px !important;
+        font-weight: 500 !important;
     }
 
-    /* Hover effect for buttons */
-    [data-testid="stSidebar"] div.stButton > button:hover {
+    /* Hover effect */
+    section[data-testid="stSidebar"] div.stButton > button:hover {
         background-color: #334155 !important;
         color: white !important;
     }
     
-    /* Active/Click effect for buttons */
-    [data-testid="stSidebar"] div.stButton > button:active,
-    [data-testid="stSidebar"] div.stButton > button:focus {
-        background-color: #3B82F6 !important; /* Blue highlight */
+    /* Active/Clicked effect */
+    section[data-testid="stSidebar"] div.stButton > button:active,
+    section[data-testid="stSidebar"] div.stButton > button:focus {
+        background-color: #3B82F6 !important;
         color: white !important;
-        border-color: #3B82F6 !important;
-    }
-
-    /* Typography for buttons */
-    [data-testid="stSidebar"] div.stButton > button p {
-        font-size: 14px !important;
-        font-weight: 500 !important;
-        margin: 0 !important;
-    }
-
-    /* Title Styling */
-    .sidebar-title-container {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 30px;
-        margin-top: -10px;
-    }
-    .sidebar-icon { font-size: 32px; }
-    .sidebar-title {
-        font-size: 24px;
-        font-weight: 700;
-        color: white;
     }
     </style>
     """,
@@ -99,45 +78,44 @@ st.markdown(
 # ─────────────────────────────────────────────────────────────
 # 4. Session State for Routing
 # ─────────────────────────────────────────────────────────────
-# I set the default to "Dashboard" so it automatically loads 
-# the Command Center screen shown in your screenshot.
 if "page" not in st.session_state:
     st.session_state.page = "Dashboard"
 
 # ─────────────────────────────────────────────────────────────
-# 5. Sidebar UI
+# 5. Build the Sidebar
 # ─────────────────────────────────────────────────────────────
 with st.sidebar:
-    # App Title
+    
+    # Custom Title
     st.markdown(
         """
-        <div class="sidebar-title-container">
-            <span class="sidebar-icon">🎯</span>
-            <span class="sidebar-title">CyberLens AI</span>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:30px; margin-top:10px;">
+            <span style="font-size:32px;">🎯</span>
+            <span style="font-size:24px; font-weight:700; color:white;">CyberLens AI</span>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # Navigation Dictionary
+    # Navigation Menu
     navigation_map = {
-        "🏠 Home": "Home",
-        "📊 Command Center": "Dashboard",
-        "🔍 Investigations": "Investigations",
-        "📤 Ingest Evidence": "Upload",
-        "⚡ Quick Analyze": "Analyze",
-        "📄 Reports": "Reports",
-        "ℹ️ About": "About",
+        "🏠  Home": "Home",
+        "📊  Command Center": "Dashboard",
+        "🔍  Investigations": "Investigations",
+        "📤  Ingest Evidence": "Upload",
+        "⚡  Quick Analyze": "Analyze",
+        "📄  Reports": "Reports",
+        "ℹ️  About": "About",
     }
 
-    # Generate Buttons
+    # Generate the custom buttons
     for label, page_key in navigation_map.items():
         if st.button(label, use_container_width=True, key=f"nav_{page_key}"):
             st.session_state.page = page_key
             st.rerun()
 
 # ─────────────────────────────────────────────────────────────
-# 6. View Router
+# 6. View Router Logic
 # ─────────────────────────────────────────────────────────────
 page_renderers = {
     "Home": home.render,
@@ -150,10 +128,9 @@ page_renderers = {
 }
 
 try:
-    # Render the selected page based on session state
     if st.session_state.page in page_renderers:
         page_renderers[st.session_state.page]()
     else:
         st.error("Page not found.")
 except Exception as e:
-    st.error(f"Error loading {st.session_state.page} page: {e}")
+    st.error(f"Error loading the {st.session_state.page} page: {e}")
